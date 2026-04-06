@@ -1,0 +1,108 @@
+openapi: 3.0.1
+info:
+  title: API Titanic - Sobreviventes
+  description: API para prever probabilidade de sobrevivência no Titanic
+  version: 1.0.0
+paths:
+  /sobreviventes:
+    post:
+      summary: Predizer sobrevivência de passageiros
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                passageiros:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PassageiroInput'
+      responses:
+        '200':
+          description: Lista de probabilidades
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resultado'
+    get:
+      summary: Listar todos os passageiros avaliados
+      responses:
+        '200':
+          description: Lista de passageiros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resultado'
+  /sobreviventes/{id}:
+    get:
+      summary: Buscar passageiro por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Passageiro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resultado'
+        '404':
+          description: Não encontrado
+    delete:
+      summary: Deletar passageiro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deletado com sucesso
+components:
+  schemas:
+    PassageiroInput:
+      type: object
+      required:
+        - idade
+        - sexo
+        - classe
+        - tarifa
+        - qtd_acompanhantes
+        - qtd_pais_filhos
+        - porto_embarque
+      properties:
+        idade:
+          type: number
+        sexo:
+          type: string
+          enum: [homem, mulher]
+        classe:
+          type: integer
+          enum: [1, 2, 3]
+        tarifa:
+          type: number
+        qtd_acompanhantes:
+          type: integer
+        qtd_pais_filhos:
+          type: integer
+        porto_embarque:
+          type: string
+          enum: [C, Q, S]
+    Resultado:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        probabilidade:
+          type: number
+
